@@ -1,0 +1,77 @@
+{
+    "ROP": {
+        "min": 0,
+        "max": 200,
+        "unit": "m/hr"
+    },
+    "Hookload": {
+        "min": 20,
+        "max": 300,
+        "unit": "kflb"
+    },
+    "WOB": {
+        "min": 0,
+        "max": 30,
+        "unit": "kflb"
+    },
+    "TotalRPM": {
+        "min": 0,
+        "max": 200,
+        "unit": "rpm"
+    },
+    "TotalSPM": {
+        "min": 0,
+        "max": 400,
+        "unit": "spm"
+    },
+    "SPP": {
+        "min": 0,
+        "max": 4000,
+        "unit": "psi"
+    },
+    "TG": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+    },
+    "TA": {
+        "min": 0,
+        "max": 100,
+        "unit": "%"
+    },
+    "MW_IN": {
+        "min": 0,
+        "max": 25,
+        "unit": "ppg"
+    },
+    "MW_Out": {
+        "min": 0,
+        "max": 25,
+        "unit": "ppg"
+    },
+    "Temp_In": {
+        "min": 0,
+        "max": 200,
+        "unit": "°C"
+    },
+    "Temp_Out": {
+        "min": 0,
+        "max": 200,
+        "unit": "°C"
+    },
+    "H2S": {
+        "min": 0,
+        "max": 50,
+        "unit": "ppm"
+    },
+    "LEL": {
+        "min": 0,
+        "max": 10,
+        "unit": "%"
+    },
+    "Co2": {
+        "min": 0,
+        "max": 0.5,
+        "unit": "%"
+    }
+}
