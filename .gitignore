@@ -8,3 +8,10 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local secrets
+.env
+
+# Runtime output
+output/
+mysql_data.json

@@ -1,3 +1,6 @@
+#validation_offiline
+
+
 import json
 
 with open("data/ranges.json", "r") as f:
@@ -20,7 +23,7 @@ rop_threshold = VALIDATION_CONFIG["ROP"]["percentage_change"]
 rop_duration = VALIDATION_CONFIG["ROP"]["duration_seconds"]
 
 
-def generate_notification_report(data):
+def validate_offline_data(data):
 
     alerts = []
 
@@ -226,6 +229,80 @@ def generate_notification_report(data):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # import json
 
 # with open("data/ranges.json", "r") as f:
@@ -253,283 +330,277 @@ def generate_notification_report(data):
 
 # from datetime import datetime
 
-def get_alert_prefix_suffix(data):
-    date_str = datetime.now().strftime("%d-%m-%y %H-%M-%S")
-    depth = data.get("depth")
-    return date_str, depth
+# def get_alert_prefix_suffix(data):
+#     date_str = datetime.now().strftime("%d-%m-%y %H-%M-%S")
+#     depth = data.get("depth")
+#     return date_str, depth
 
-def validate_activity_conditions(data: dict):
-    alerts = []
+# def validate_activity_conditions(data: dict):
+#     alerts = []
 
-    activity = data.get("Activity")
+#     activity = data.get("Activity")
 
-    if not activity:
-        return ["Activity is missing"]
+#     if not activity:
+#         return ["Activity is missing"]
 
-    rules = ACTIVITY_RULES.get(activity)
+#     rules = ACTIVITY_RULES.get(activity)
 
-    if not rules:
-        return [f"Unknown activity: {activity}"]
+#     if not rules:
+#         return [f"Unknown activity: {activity}"]
 
-    for param, is_mandatory in rules.items():
+#     for param, is_mandatory in rules.items():
 
-        value = data.get(param)
+#         value = data.get(param)
 
-        # Rule = 1 means value must be > 0
-        if is_mandatory == 1:
+#         # Rule = 1 means value must be > 0
+#         if is_mandatory == 1:
 
-            date_str, depth = get_alert_prefix_suffix(data)
-            if value is None or value <= 0:
-                alerts.append(
-                    f"[{date_str}] {param} cannot be 0 in {activity} where bed is{depth}"
-                )
+#             date_str, depth = get_alert_prefix_suffix(data)
+#             if value is None or value <= 0:
+#                 alerts.append(
+#                     f"[{date_str}] {param} cannot be 0 in {activity} where bed is{depth}"
+#                 )
 
-    return alerts
+#     return alerts
 
 
 
-def validate_ranges(data: dict):
-    alerts = []
+# def validate_ranges(data: dict):
+#     alerts = []
 
-    for param, limits in RANGES.items():
-        value = data.get(param)
+#     for param, limits in RANGES.items():
+#         value = data.get(param)
 
-        if value is None:
-            continue
+#         if value is None:
+#             continue
     
-        min_val = limits["min"]
-        max_val = limits["max"]
-        unit = limits.get("unit", "")
+#         min_val = limits["min"]
+#         max_val = limits["max"]
+#         unit = limits.get("unit", "")
 
-        date_str, depth = get_alert_prefix_suffix(data)
-        if value < min_val:
-            alerts.append(
-                f"[{date_str}] {param} - {value} {unit} is below minimum limit {min_val}{unit} BD-{depth}"
-            )
+#         date_str, depth = get_alert_prefix_suffix(data)
+#         if value < min_val:
+#             alerts.append(
+#                 f"[{date_str}] {param} - {value} {unit} is below minimum limit {min_val}{unit} BD-{depth}"
+#             )
 
-        elif value > max_val:
-            alerts.append(
-                f"[{date_str}] {param} - {value} {unit} is above maximum limit {max_val}{unit}  BD-{depth}"
-            )
+#         elif value > max_val:
+#             alerts.append(
+#                 f"[{date_str}] {param} - {value} {unit} is above maximum limit {max_val}{unit}  BD-{depth}"
+#             )
 
-    return alerts
+#     return alerts
 
 
 
 
+# from datetime import datetime
 
+# ta_gt_tg_start = None
 
 
-from datetime import datetime
+# def validate_ta_tg(data):
+#     global ta_gt_tg_start
 
-ta_gt_tg_start = None
+#     alerts = []
 
+#     ta = data.get("TA")
+#     tg = data.get("TG")
 
-def validate_ta_tg(data):
-    global ta_gt_tg_start
+#     if ta is None or tg is None:
+#         return alerts
 
-    alerts = []
+#     if ta > tg:
+#         if ta_gt_tg_start is None:
+#             ta_gt_tg_start = datetime.now()
 
-    ta = data.get("TA")
-    tg = data.get("TG")
+#         elapsed = (datetime.now() - ta_gt_tg_start).total_seconds()
 
-    if ta is None or tg is None:
-        return alerts
+#         date_str, depth = get_alert_prefix_suffix(data)
+#         if elapsed >= ta_tg_duration:
+#             alerts.append(f"[{date_str}] TA is greater than TG where BD-{depth}")
+#     else:
+#         # Reset timer when condition clears
+#         ta_gt_tg_start = None
 
-    if ta > tg:
-        if ta_gt_tg_start is None:
-            ta_gt_tg_start = datetime.now()
+#     return alerts
 
-        elapsed = (datetime.now() - ta_gt_tg_start).total_seconds()
 
-        date_str, depth = get_alert_prefix_suffix(data)
-        if elapsed >= ta_tg_duration:
-            alerts.append(f"[{date_str}] TA is greater than TG where BD-{depth}")
-    else:
-        # Reset timer when condition clears
-        ta_gt_tg_start = None
 
-    return alerts
 
+# from datetime import datetime
 
+# previous_spp = None
+# previous_spp_time = None
 
 
-from datetime import datetime
+# def validate_spp_change(data):
+#     global previous_spp, previous_spp_time
 
-previous_spp = None
-previous_spp_time = None
+#     alerts = []
 
+#     spp = data.get("SPP")
 
-def validate_spp_change(data):
-    global previous_spp, previous_spp_time
+#     if spp is None:
+#         return alerts, 0.0
 
-    alerts = []
+#     current_time = datetime.now()
 
-    spp = data.get("SPP")
+#     # First value
+#     if previous_spp is None:
+#         previous_spp = spp
+#         previous_spp_time = current_time
+#         return alerts, 0.0
 
-    if spp is None:
-        return alerts, 0.0
+#     # Prevent division by zero
+#     if previous_spp <= 0:
+#         previous_spp = spp
+#         previous_spp_time = current_time
+#         return alerts, 0.0
 
-    current_time = datetime.now()
+#     elapsed = (
+#         current_time - previous_spp_time
+#     ).total_seconds()
 
-    # First value
-    if previous_spp is None:
-        previous_spp = spp
-        previous_spp_time = current_time
-        return alerts, 0.0
+#     if elapsed >= spp_duration:
 
-    # Prevent division by zero
-    if previous_spp <= 0:
-        previous_spp = spp
-        previous_spp_time = current_time
-        return alerts, 0.0
+#         percent_change = (
+#             (spp - previous_spp) / previous_spp
+#         ) * 100
 
-    elapsed = (
-        current_time - previous_spp_time
-    ).total_seconds()
+#         date_str, depth = get_alert_prefix_suffix(data)
 
-    if elapsed >= spp_duration:
+#         if percent_change > spp_threshold:
+#             alerts.append(
+#                 f"[{date_str}] SPP increased by {percent_change:.2f}% where BD-{depth}"
+#             )
 
-        percent_change = (
-            (spp - previous_spp) / previous_spp
-        ) * 100
+#         elif percent_change < -spp_threshold:
+#             alerts.append(
+#                 f"[{date_str}] SPP dropped by {abs(percent_change):.2f}% where BD-{depth}"
+#             )
 
-        date_str, depth = get_alert_prefix_suffix(data)
+#         # Reset baseline
+#         previous_spp = spp
+#         previous_spp_time = current_time
 
-        if percent_change > spp_threshold:
-            alerts.append(
-                f"[{date_str}] SPP increased by {percent_change:.2f}% where BD-{depth}"
-            )
+#         return alerts, round(percent_change, 2)
 
-        elif percent_change < -spp_threshold:
-            alerts.append(
-                f"[{date_str}] SPP dropped by {abs(percent_change):.2f}% where BD-{depth}"
-            )
+#     return alerts, 0.0
 
-        # Reset baseline
-        previous_spp = spp
-        previous_spp_time = current_time
 
-        return alerts, round(percent_change, 2)
 
-    return alerts, 0.0
 
+# from datetime import datetime
 
+# previous_totalspm = None
+# previous_totalspm_time = None
 
 
-from datetime import datetime
+# def validate_totalspm_change(data):
+#     global previous_totalspm, previous_totalspm_time
 
-previous_totalspm = None
-previous_totalspm_time = None
+#     alerts = []
 
+#     totalspm = data.get("TotalSPM")
 
-def validate_totalspm_change(data):
-    global previous_totalspm, previous_totalspm_time
+#     if totalspm is None:
+#         return alerts, 0.0
 
-    alerts = []
+#     current_time = datetime.now()
 
-    totalspm = data.get("TotalSPM")
+#     # First value
+#     if previous_totalspm is None:
+#         previous_totalspm = totalspm
+#         previous_totalspm_time = current_time
+#         return alerts, 0.0
 
-    if totalspm is None:
-        return alerts, 0.0
+#     # Prevent division by zero
+#     if previous_totalspm <= 0:
+#         previous_totalspm = totalspm
+#         previous_totalspm_time = current_time
+#         return alerts, 0.0
 
-    current_time = datetime.now()
+#     elapsed = (
+#         current_time - previous_totalspm_time
+#     ).total_seconds()
 
-    # First value
-    if previous_totalspm is None:
-        previous_totalspm = totalspm
-        previous_totalspm_time = current_time
-        return alerts, 0.0
+#     if elapsed >= totalspm_duration:
 
-    # Prevent division by zero
-    if previous_totalspm <= 0:
-        previous_totalspm = totalspm
-        previous_totalspm_time = current_time
-        return alerts, 0.0
+#         percent_change = (
+#             (totalspm - previous_totalspm)
+#             / previous_totalspm
+#         ) * 100
 
-    elapsed = (
-        current_time - previous_totalspm_time
-    ).total_seconds()
+#         date_str, depth = get_alert_prefix_suffix(data)
 
-    if elapsed >= totalspm_duration:
+#         if percent_change > totalspm_threshold:
+#             alerts.append(
+#                 f"[{date_str}] TotalSPM increased by {percent_change:.2f}% Where BD-{depth}"
+#             )
 
-        percent_change = (
-            (totalspm - previous_totalspm)
-            / previous_totalspm
-        ) * 100
+#         elif percent_change < -totalspm_threshold:
+#             alerts.append(
+#                 f"[{date_str}] TotalSPM dropped by {abs(percent_change):.2f}% Where BD-{depth}"
+#             )
 
-        date_str, depth = get_alert_prefix_suffix(data)
+#         previous_totalspm = totalspm
+#         previous_totalspm_time = current_time
 
-        if percent_change > totalspm_threshold:
-            alerts.append(
-                f"[{date_str}] TotalSPM increased by {percent_change:.2f}% Where BD-{depth}"
-            )
+#         return alerts, round(percent_change, 2)
 
-        elif percent_change < -totalspm_threshold:
-            alerts.append(
-                f"[{date_str}] TotalSPM dropped by {abs(percent_change):.2f}% Where BD-{depth}"
-            )
+#     return alerts, 0.0
 
-        previous_totalspm = totalspm
-        previous_totalspm_time = current_time
 
-        return alerts, round(percent_change, 2)
 
-    return alerts, 0.0
 
 
 
+# from datetime import datetime
 
+# previous_rop = None
+# previous_rop_time = None
 
 
-from datetime import datetime
+# def validate_rop_change(data):
+#     global previous_rop, previous_rop_time
 
-previous_rop = None
-previous_rop_time = None
+#     alerts = []
 
+#     rop = data.get("ROP")
 
-def validate_rop_change(data):
-    global previous_rop, previous_rop_time
+#     if rop is None:
+#         return alerts, 0.0
 
-    alerts = []
+#     current_time = datetime.now()
 
-    rop = data.get("ROP")
+#     if previous_rop is None:
+#         previous_rop = rop
+#         previous_rop_time = current_time
+#         return alerts, 0.0
 
-    if rop is None:
-        return alerts, 0.0
 
-    current_time = datetime.now()
+#     elapsed = (
+#         current_time - previous_rop_time
+#     ).total_seconds()
 
-    if previous_rop is None:
-        previous_rop = rop
-        previous_rop_time = current_time
-        return alerts, 0.0
+#     if elapsed >= rop_duration:
 
+#         percent_change = (
+#             (rop - previous_rop)
+#             / previous_rop
+#         ) * 100
 
-    elapsed = (
-        current_time - previous_rop_time
-    ).total_seconds()
+#         date_str, depth = get_alert_prefix_suffix(data)
 
-    if elapsed >= rop_duration:
+#         if percent_change > rop_threshold:
+#             alerts.append(
+#                 f"[{date_str}] ROP increased by {percent_change:.2f}% Where BD-{depth}"
+#             )
 
-        percent_change = (
-            (rop - previous_rop)
-            / previous_rop
-        ) * 100
+#         previous_rop = rop
+#         previous_rop_time = current_time
 
-        date_str, depth = get_alert_prefix_suffix(data)
+#         return alerts, round(percent_change, 2)
 
-        if percent_change > rop_threshold:
-            alerts.append(
-                f"[{date_str}] ROP increased by {percent_change:.2f}% Where BD-{depth}"
-            )
-
-        previous_rop = rop
-        previous_rop_time = current_time
-
-        return alerts, round(percent_change, 2)
-
-    return alerts, 0.0
-
-
-
+#     return alerts, 0.0

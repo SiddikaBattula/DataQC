@@ -46,12 +46,10 @@ def save_log_to_csv(
         "LEL": request_data.get("LEL"),
         "Co2": request_data.get("Co2"),
 
-        "Alert1": ", ".join(response_data["alert1"]),
-        "Alert2": ", ".join(response_data["alert2"]),
-        "Alert3": ", ".join(response_data["alert3"]),
-        "Alert4": ", ".join(response_data["alert4"]),
-        "Alert5": ", ".join(response_data["alert5"]),
-        "Alert6": ", ".join(response_data["alert6"])
+        # main.py sends {"status": ..., "alerts": [...]} - a single list, not
+        # the six alert1..alert6 keys this used to read.
+        "Alert_Count": len(response_data.get("alerts", [])),
+        "Alerts": " | ".join(response_data.get("alerts", []))
     }
 
     df_new = pd.DataFrame([row])

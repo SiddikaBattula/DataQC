@@ -1,0 +1,32 @@
+# Secrets - never bake credentials into an image
+.env
+*.env
+!.env.example
+
+# Local virtualenv (the image builds its own)
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Version control / editors
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Runtime output - belongs in a volume, not the image
+output/
+mysql_data.json
+
+# Docs and container files themselves
+README.md
+Dockerfile
+docker-compose.yml
+.dockerignore

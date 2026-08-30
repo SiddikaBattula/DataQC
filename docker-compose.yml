@@ -1,0 +1,43 @@
+services:
+  dataqc:
+    build: .
+    image: dataqc-api:latest
+    container_name: dataqc-api
+
+    # Host port 8000 -> container port 8000.
+    # Change only the left number to move it, e.g. "9000:8000".
+    ports:
+      - "8000:8000"
+
+    # Database credentials and log settings are read from .env.
+    # Copy .env.example to .env before the first run.
+    env_file:
+      - .env
+
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_COLOR: always
+      # Without this the container runs on UTC and every logged timestamp
+      # (including the ones embedded in alert strings) is offset from the rig.
+      TZ: ${TZ:-UTC}
+
+    # Daily CSVs survive container rebuilds because they live on the host,
+    # not inside the image. Logs are terminal-only and are not written to disk.
+    volumes:
+      - ./output:/app/output
+      # Rule files mounted read-only so thresholds can be edited without a
+      # rebuild - restart the container to pick up changes.
+      - ./data:/app/data:ro
+
+    restart: unless-stopped
+
+    # Colourised, timestamped output in `docker compose logs -f`
+    tty: true
+
+    # Docker's own ring buffer, which is what `docker compose logs` reads.
+    # Capped so it cannot grow without bound on a long-running rig box.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
